@@ -74,6 +74,21 @@ Becomes:
   
 Also, `pretend_now_is` should impact `ActiveSupport` generated `Date` extensions such as `Date.today`, `Date.tomorrow`, and so on.
 
+If you want all the tests in a test suite to run against the same simulated time, you can put a single call to `pretend_now_is` at the top, like this:
+
+    class CompanyTest < Test::Unit::TestCase
+      pretend_now_is(Date.civil(2000,1,1))
+
+      # test methods here
+
+      # you can still set a different simulated time for a single test:
+      def test_something
+        pretend_now_is(Date.civil(2000,6,1)) do
+          # test code
+        end
+      end
+    end
+
 ## Credits
 
 time-warp is maintained and funded by [Harvest](http://www.getHarvest.com). Want to work on projects like this? [We're hiring](http://www.getharvest.com/careers)!

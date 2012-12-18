@@ -7,12 +7,13 @@ module TimeWarpAbility
     end
 
     def pretend_now_is(*args)
-      Time.testing_offset = Time.now - time_from(*args)
+      original_offset     = Time.testing_offset
+      Time.testing_offset = Time.real_now - time_from(*args)
       if block_given?
         begin
           yield
         ensure
-          reset_to_real_time
+          Time.testing_offset = original_offset
         end
       end
     end
@@ -30,6 +31,9 @@ module Test # :nodoc:
   module Unit # :nodoc:
     class TestCase
       include ::TimeWarpAbility
+      class << self
+        include ::TimeWarpAbility
+      end
     end
   end
 end
@@ -38,6 +42,9 @@ module MiniTest
   class Unit
     class TestCase
       include ::TimeWarpAbility
+      class << self
+        include ::TimeWarpAbility
+      end
     end
   end
 end
@@ -46,7 +53,9 @@ module RSpec
   module Core
     class ExampleGroup
       include ::TimeWarpAbility
-     # Time warp to the specified time for the duration of the passed block.
+      class << self
+        include ::TimeWarpAbility
+      end
     end
   end
 end
