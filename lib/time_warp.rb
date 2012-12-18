@@ -38,12 +38,14 @@ module Test # :nodoc:
   end
 end
 
-module MiniTest
-  class Unit
-    class TestCase
-      include ::TimeWarpAbility
-      class << self
+if defined? MiniTest
+  module MiniTest
+    class Unit
+      class TestCase
         include ::TimeWarpAbility
+        class << self
+          include ::TimeWarpAbility
+        end
       end
     end
   end
